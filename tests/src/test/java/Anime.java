@@ -82,9 +82,9 @@ public class Anime extends PageBase {
 
      public boolean isAddlistElementVisible() {
           try {
-               WebElement element = driver.findElement(addListLocator);
+               WebElement element = this.waitAndReturnElement(addListLocator);
                return element.isDisplayed();
-          } catch (NoSuchElementException e) {
+          } catch (Exception e) {
                return false;
           }
      }

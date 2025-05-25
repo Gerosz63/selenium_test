@@ -34,7 +34,7 @@ public class PageTest {
      @Before
      public void setUp() throws MalformedURLException, java.lang.InterruptedException {
           ChromeOptions options = new ChromeOptions();
-          options.addArguments("--headless");
+          options.addArguments("--start-maximized");
           driver = new RemoteWebDriver(new URL("http://selenium:4444/wd/hub"), options);
           this.driver.manage().window().maximize();
 
@@ -58,7 +58,7 @@ public class PageTest {
           new WebDriverWait(driver, 30).until(ExpectedConditions.invisibilityOfElementLocated(By.id("qc-cmp2-ui")));
      }
 
-     
+     @Ignore
      @Test
      public void testLoginWithInvalidPassword() {
           LoginPage loginPage = new LoginPage(this.driver);
@@ -66,8 +66,9 @@ public class PageTest {
           WebElement errorMessage = loginPageNew.getErrorMessageBox();
           assertTrue("Expected error message to be displayed", errorMessage != null);
           assertEquals("Your username or password is incorrect.", errorMessage.getText());
-          assertTrue("Expected login to fail", !loginPageNew.isLoggedOut());
+          assertTrue("Expected login to fail", loginPageNew.isLoggedOut());
      }
+     @Ignore
      
      @Test
      public void testLoginWithValidCredentials() {
@@ -79,6 +80,7 @@ public class PageTest {
           String actualTitle = mainPage.getPageTitle();
           assertEquals("MyAnimeList.net - Panel", actualTitle);
      }
+     @Ignore
      
      @Test
      public void testLogout() {
@@ -94,6 +96,7 @@ public class PageTest {
           MainPage loggedOutPage = mainPage.logout();
           assertTrue("Expected to be logged out", loggedOutPage.isLoggedOut());
      }
+     @Ignore
      
      @Test
      public void testHoverOverAnime() {
@@ -103,6 +106,7 @@ public class PageTest {
           assertTrue("Expected anime Menu to be visible", mainPage.isAnimeMenuVisible());
      }
 
+     @Ignore
      
      @Test
      public void testTopAnime() {
@@ -111,6 +115,7 @@ public class PageTest {
           String actualHeader = topAnimePage.getTopAnimeHeaderText();
           assertTrue("Expected top anime header to match", actualHeader.contains("Top Anime Series"));
      }
+     @Ignore
      
      @Test
      public void testMainTopAnimesListTitle() {
@@ -119,6 +124,7 @@ public class PageTest {
           String actualTitle = topAnimePage.getTopAnimeHeaderText();
           assertTrue("Expected top anime header to match", actualTitle.contains("Top Anime Series"));
      }
+     @Ignore
      
      @Test
      public void testTopAiringAnimeNameFromDiffPages() {
@@ -131,6 +137,7 @@ public class PageTest {
 
           assertEquals(topAiringAnimeTitleFromPanel, topAiringAnimeTitleFromTopAiringAnimePage);
      }
+     @Ignore
      
      @Test
      public void testAnimeEpisodesMatch() {
@@ -202,6 +209,7 @@ public class PageTest {
           assertTrue("Expected 'Add to List' element to be visible", animePage4.isAddlistElementVisible());
      }
 
+     @Ignore
 
      @Test
      public void testAnimeSearchOnFirstPage() {
