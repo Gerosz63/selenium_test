@@ -25,7 +25,6 @@ class PageBase {
      private By loginButtonLocator = By.id("malLogin");
      private By animeMenuLocator = By.xpath("//ul[@id='nav']//li[1]");
      private By animeUlMenuLocator = By.xpath("//ul[@id='nav']//li[1]//ul");
-     private By topAnimeMenuPointLocator = By.xpath("//a[text()='Top Anime']");
 
      public PageBase(WebDriver driver) {
           this.driver = driver;
