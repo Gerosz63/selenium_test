@@ -68,7 +68,7 @@ public class PageTest {
           assertEquals("Your username or password is incorrect.", errorMessage.getText());
           assertTrue("Expected login to fail", loginPageNew.isLoggedOut());
      }
-     @Ignore
+     
      
      @Test
      public void testLoginWithValidCredentials() {
@@ -80,7 +80,7 @@ public class PageTest {
           String actualTitle = mainPage.getPageTitle();
           assertEquals("MyAnimeList.net - Panel", actualTitle);
      }
-     @Ignore
+     
      
      @Test
      public void testLogout() {
@@ -96,7 +96,7 @@ public class PageTest {
           MainPage loggedOutPage = mainPage.logout();
           assertTrue("Expected to be logged out", loggedOutPage.isLoggedOut());
      }
-     @Ignore
+     
      
      @Test
      public void testHoverOverAnime() {
@@ -106,7 +106,7 @@ public class PageTest {
           assertTrue("Expected anime Menu to be visible", mainPage.isAnimeMenuVisible());
      }
 
-     @Ignore
+     
      
      @Test
      public void testTopAnime() {
@@ -115,7 +115,7 @@ public class PageTest {
           String actualHeader = topAnimePage.getTopAnimeHeaderText();
           assertTrue("Expected top anime header to match", actualHeader.contains("Top Anime Series"));
      }
-     @Ignore
+     
      
      @Test
      public void testMainTopAnimesListTitle() {
@@ -124,7 +124,7 @@ public class PageTest {
           String actualTitle = topAnimePage.getTopAnimeHeaderText();
           assertTrue("Expected top anime header to match", actualTitle.contains("Top Anime Series"));
      }
-     @Ignore
+     
      
      @Test
      public void testTopAiringAnimeNameFromDiffPages() {
@@ -137,7 +137,7 @@ public class PageTest {
 
           assertEquals(topAiringAnimeTitleFromPanel, topAiringAnimeTitleFromTopAiringAnimePage);
      }
-     @Ignore
+     
      
      @Test
      public void testAnimeEpisodesMatch() {
@@ -169,7 +169,8 @@ public class PageTest {
 
           assertEquals("1", actualStatus);
 
-          Integer status = new java.util.Random().nextInt(6) + 1;
+          Integer[] statuses = {1,2,3,4,6};
+          Integer status = statuses[new java.util.Random().nextInt(statuses.length)];
           Integer score = new java.util.Random().nextInt(10) + 1;
           Integer episodes = new java.util.Random().nextInt(maxEpisode + 1);
 
@@ -187,7 +188,7 @@ public class PageTest {
 
 
 
-          Integer status2 = new java.util.Random().nextInt(6) + 1;
+          Integer status2 = statuses[new java.util.Random().nextInt(statuses.length)];
           Integer score2 = new java.util.Random().nextInt(10) + 1;
           Integer episodes2 = new java.util.Random().nextInt(maxEpisode + 1);
 
@@ -209,7 +210,7 @@ public class PageTest {
           assertTrue("Expected 'Add to List' element to be visible", animePage4.isAddlistElementVisible());
      }
 
-     @Ignore
+     
 
      @Test
      public void testAnimeSearchOnFirstPage() {
