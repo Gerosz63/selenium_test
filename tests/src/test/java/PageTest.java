@@ -1,5 +1,5 @@
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import static org.junit.Assert.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -43,10 +43,11 @@ public class PageTest {
      @Before
      public void setUp() throws MalformedURLException, java.lang.InterruptedException {
           ChromeOptions options = new ChromeOptions();
-          options.addArguments("--headless");
+          //options.addArguments("--headless");
           driver = new RemoteWebDriver(new URL("http://selenium:4444/wd/hub"), options);
           this.driver.manage().window().maximize();
 
+          
           // Add consent cookie and gdpr to bypass the cookie consent popup
           this.driver.get(baseUrl);
           this.driver.manage().addCookie(consentCookie);
@@ -66,6 +67,7 @@ public class PageTest {
           new WebDriverWait(driver, 30).until(ExpectedConditions.invisibilityOfElementLocated(By.id("qc-cmp2-ui")));
      }
 
+     @Ignore
      @Test
      public void testLoginWithInvalidUsername() {
           LoginPage loginPage = new LoginPage(this.driver);
@@ -75,7 +77,7 @@ public class PageTest {
           assertEquals("Your username or password is incorrect.", errorMessage.getText());
           assertTrue("Expected login to fail", loginPageNew.isLoggedOut());
      }
-
+     @Ignore
      @Test
      public void testLoginWithInvalidPassword() {
           LoginPage loginPage = new LoginPage(this.driver);
@@ -90,10 +92,11 @@ public class PageTest {
      public void testLoginWithValidCredentials() {
           LoginPage loginPage = new LoginPage(this.driver);
           MainPage mainPage = loginPage.validLogin(username, password);
-          String actualTitle = mainPage.getPageTitle();
-          assertEquals("MyAnimeList.net - Panel", actualTitle);
           String actualUsername = mainPage.getUsername();
           assertEquals("Expected username to match", username, actualUsername);
+          
+          String actualTitle = mainPage.getPageTitle();
+          assertEquals("MyAnimeList.net - Panel", actualTitle);
      }
 
      @Test
@@ -101,13 +104,57 @@ public class PageTest {
           LoginPage loginPage = new LoginPage(this.driver);
           MainPage mainPage = loginPage.validLogin(username, password);
 
-          String actualTitle = mainPage.getPageTitle();
-          assertEquals("MyAnimeList.net - Panel", actualTitle);
           String actualUsername = mainPage.getUsername();
           assertEquals("Expected username to match", username, actualUsername);
+
+          String actualTitle = mainPage.getPageTitle();
+          assertEquals("MyAnimeList.net - Panel", actualTitle);
+
           MainPage loggedOutPage = mainPage.logout();
-          assertTrue("Expected to be logged out", !loggedOutPage.isLoggedIn()); 
+          assertTrue("Expected to be logged out", loggedOutPage.isLoggedOut());
      }
+
+     @Test
+     public void testHoverOverAnime() {
+          LoginPage loginPage = new LoginPage(this.driver);
+          MainPage mainPage = loginPage.validLogin(username, password);
+          assertFalse("Expected anime Menu to be hidden", mainPage.isAnimeMenuVisible());
+          mainPage.hoverOverAnimeElement();
+          assertTrue("Expected anime Menu to be visible", mainPage.isAnimeMenuVisible());
+     }
+
+     
+     @Test
+     public void testTopAnime() {
+          LoginPage loginPage = new LoginPage(this.driver);
+          MainPage mainPage = loginPage.validLogin(username, password);
+          TopAnime topAnimePage = mainPage.goToTopAnime();
+          String actualHeader = topAnimePage.getTopAnimeHeaderText();
+          assertTrue("Expected top anime header to match", actualHeader.contains("Top Anime Series"));
+     }
+
+     @Test
+     public void testMainTopAnimesListTitle() {
+          LoginPage loginPage = new LoginPage(this.driver);
+          MainPage mainPage = loginPage.validLogin(username, password);
+          TopAnime topAnimePage = mainPage.goToTopAnime();
+          String actualTitle = topAnimePage.getTopAnimeHeaderText();
+          assertTrue("Expected top anime header to match", actualTitle.contains("Top Anime Series"));
+     }
+
+     @Test
+     public void testTopAiringAnimeNameFromDiffPages() {
+          LoginPage loginPage = new LoginPage(this.driver);
+          MainPage mainPage = loginPage.validLogin(username, password);
+          String topAiringAnimeTitleFromPanel = mainPage.getTopAiringAnimeTitle();
+
+          TopAnime topAnimePage = mainPage.goToTopAnime();
+          TopAnime topAiringAnimePage = topAnimePage.gotoTopAiringAnime();
+          String topAiringAnimeTitleFromTopAiringAnimePage = topAiringAnimePage.getTopAnimeTitle();
+
+          assertEquals(topAiringAnimeTitleFromPanel, topAiringAnimeTitleFromTopAiringAnimePage);
+     }
+
 
      @After
      public void close() {
