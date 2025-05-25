@@ -1,0 +1,29 @@
+name: Selenium Test with Gradle
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  selenium_test:
+    runs-on: ubuntu-latest
+
+    container:
+      image: gradle:8.0.2
+
+    services:
+      selenium:
+        image: selenium/standalone-chrome:3.141.59
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Gradle tests
+        working-directory: ./tests
+        run: |
+          gradle test
