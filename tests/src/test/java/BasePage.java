@@ -25,15 +25,33 @@ class PageBase {
      private By loginButtonLocator = By.id("malLogin");
      private By animeMenuLocator = By.xpath("//ul[@id='nav']//li[1]");
      private By animeUlMenuLocator = By.xpath("//ul[@id='nav']//li[1]//ul");
+     private By topAnimeMenuPointLocator = By.xpath("//a[text()='Top Anime']");
 
      public PageBase(WebDriver driver) {
           this.driver = driver;
           this.wait = new WebDriverWait(driver, 10);
           this.actions = new Actions(driver);
      }
-    
-     protected WebElement waitAndReturnElement(By locator) {
+
+     protected void waitUntilElementIsVisible(By locator) {
           this.wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+     }
+
+     protected void waitUntilElementIsClickable(By locator) {
+          this.wait.until(ExpectedConditions.elementToBeClickable(locator));
+     }
+     protected void waitUntilElementInvisible(By locator) {
+          this.wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+     }
+
+     protected  void waitAndClickElement(By locator) {
+          this.waitUntilElementIsClickable(locator);
+          WebElement element = this.driver.findElement(locator);
+          element.click();
+     }
+
+     protected WebElement waitAndReturnElement(By locator) {
+          this.waitUntilElementIsVisible(locator);
           return this.driver.findElement(locator);
      }
 

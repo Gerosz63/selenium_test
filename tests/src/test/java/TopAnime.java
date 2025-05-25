@@ -8,14 +8,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import org.openqa.selenium.By;
-
+import org.openqa.selenium.support.ui.Select;
 
 
 public class TopAnime extends PageBase {
 
      private By topAnimeHeader = By.xpath("//div[@id='content']//div[@class='pb12']//h2");
      private By topAiringAnime = By.xpath("//a[text()='Top Airing']");
-     private By topAnime = By.xpath("//h3[contains(@class, 'anime_ranking_h3')]//a");
+     private By topAnime = By.xpath("//h3[contains(@class, 'anime_ranking_h3')]//a");;
+
 
      public TopAnime(WebDriver driver) {
           super(driver);

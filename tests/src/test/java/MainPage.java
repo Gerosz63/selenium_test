@@ -18,8 +18,11 @@ public class MainPage extends PageBase {
 
      public MainPage(WebDriver driver) {
           super(driver);
+          
      }
-
+     public void waitForPageToLoad() {
+            this.waitUntilElementIsVisible(topAiringAnimeTitleLocator);
+     }
      public String getTopAiringAnimeTitle() {
           try {
                WebElement titleElement = this.waitAndReturnElement(topAiringAnimeTitleLocator);

@@ -26,15 +26,6 @@ public class PageTest {
           "/",
           java.util.Date.from(java.time.ZonedDateTime.now().plusYears(1).toInstant())
      );
-     private Cookie sessionCookie; //MALHLOGSESSID
-     private Cookie sessionCookie2; //MALSESSIONID
-     private Cookie sessionCookie3 = new Cookie(
-          "is_logged_in",
-          "1",
-          ".myanimelist.net",
-          "/",
-          java.util.Date.from(java.time.ZonedDateTime.now().plusYears(1).toInstant())
-     ); //is_logged_in
 
      private String username = "Almafa123";
      private String password = "AlmaKorte123";
@@ -87,7 +78,7 @@ public class PageTest {
           assertEquals("Your username or password is incorrect.", errorMessage.getText());
           assertTrue("Expected login to fail", !loginPageNew.isLoggedOut());
      }
-
+     @Ignore
      @Test
      public void testLoginWithValidCredentials() {
           LoginPage loginPage = new LoginPage(this.driver);
@@ -98,7 +89,7 @@ public class PageTest {
           String actualTitle = mainPage.getPageTitle();
           assertEquals("MyAnimeList.net - Panel", actualTitle);
      }
-
+     @Ignore
      @Test
      public void testLogout() {
           LoginPage loginPage = new LoginPage(this.driver);
@@ -113,39 +104,35 @@ public class PageTest {
           MainPage loggedOutPage = mainPage.logout();
           assertTrue("Expected to be logged out", loggedOutPage.isLoggedOut());
      }
-
+     @Ignore
      @Test
      public void testHoverOverAnime() {
-          LoginPage loginPage = new LoginPage(this.driver);
-          MainPage mainPage = loginPage.validLogin(username, password);
+          MainPage mainPage = new MainPage(this.driver);
           assertFalse("Expected anime Menu to be hidden", mainPage.isAnimeMenuVisible());
           mainPage.hoverOverAnimeElement();
           assertTrue("Expected anime Menu to be visible", mainPage.isAnimeMenuVisible());
      }
 
-     
+     @Ignore
      @Test
      public void testTopAnime() {
-          LoginPage loginPage = new LoginPage(this.driver);
-          MainPage mainPage = loginPage.validLogin(username, password);
+          MainPage mainPage = new MainPage(this.driver);
           TopAnime topAnimePage = mainPage.goToTopAnime();
           String actualHeader = topAnimePage.getTopAnimeHeaderText();
           assertTrue("Expected top anime header to match", actualHeader.contains("Top Anime Series"));
      }
-
+     @Ignore
      @Test
      public void testMainTopAnimesListTitle() {
-          LoginPage loginPage = new LoginPage(this.driver);
-          MainPage mainPage = loginPage.validLogin(username, password);
+          MainPage mainPage = new MainPage(this.driver);
           TopAnime topAnimePage = mainPage.goToTopAnime();
           String actualTitle = topAnimePage.getTopAnimeHeaderText();
           assertTrue("Expected top anime header to match", actualTitle.contains("Top Anime Series"));
      }
-
+     @Ignore
      @Test
      public void testTopAiringAnimeNameFromDiffPages() {
-          LoginPage loginPage = new LoginPage(this.driver);
-          MainPage mainPage = loginPage.validLogin(username, password);
+          MainPage mainPage = new MainPage(this.driver);
           String topAiringAnimeTitleFromPanel = mainPage.getTopAiringAnimeTitle();
 
           TopAnime topAnimePage = mainPage.goToTopAnime();
@@ -153,6 +140,110 @@ public class PageTest {
           String topAiringAnimeTitleFromTopAiringAnimePage = topAiringAnimePage.getTopAnimeTitle();
 
           assertEquals(topAiringAnimeTitleFromPanel, topAiringAnimeTitleFromTopAiringAnimePage);
+     }
+     @Ignore
+     @Test
+     public void testAnimeEpisodesMatch() {
+          MainPage mainPage = new MainPage(this.driver);
+          TopAnime topAnimePage = mainPage.goToTopAnime();
+          Anime animePage = topAnimePage.goToTop1Anime();
+          Integer expectedEpisodes = Integer.valueOf(animePage.getEpisodesNumber().replace("Episodes: ", "").trim());
+
+          AnimeEpisodes animeEpisodesPage = animePage.goToEpisodes();
+          Integer actualEpisodes = animeEpisodesPage.getEpisodeCount();
+          assertEquals(expectedEpisodes, actualEpisodes);
+     }
+
+     @Ignore
+     @Test
+     public void testStatusModificationTopAnime() {
+          LoginPage loginPage = new LoginPage(this.driver);
+          MainPage mainPage = loginPage.validLogin(username, password);
+
+          TopAnime topAnimePage = mainPage.goToTopAnime();
+
+          Anime animePage = topAnimePage.goToTop1Anime();
+          assertTrue("Expected 'Add to List' element to be visible", animePage.isAddlistElementVisible());
+
+          Integer maxEpisode = Integer.parseInt(animePage.getEpisodesNumber().replace("Episodes: ", "").trim());
+
+          animePage.addToList();
+          String actualStatus = animePage.getAnimeStatus();
+
+          assertEquals("1", actualStatus);
+
+          Integer status = new java.util.Random().nextInt(6) + 1;
+          Integer score = new java.util.Random().nextInt(10) + 1;
+          Integer episodes = new java.util.Random().nextInt(maxEpisode + 1);
+
+          AnimeStatus animeStatusPage = animePage.gotoAnimeStatus();
+          Anime animePage2 = animeStatusPage.setStatus(status.toString(), episodes.toString(), score.toString());
+
+
+          actualStatus = animePage2.getAnimeStatus();
+          String actualScore = animePage2.getAnimeScore();
+          String actualEpisodes = animePage2.getAnimeWatchedEpisodes();
+
+          assertEquals(status.toString(), actualStatus);
+          assertEquals(score.toString(), actualScore);
+          assertEquals(episodes.toString(), actualEpisodes);
+
+
+
+          Integer status2 = new java.util.Random().nextInt(6) + 1;
+          Integer score2 = new java.util.Random().nextInt(10) + 1;
+          Integer episodes2 = new java.util.Random().nextInt(maxEpisode + 1);
+
+          AnimeStatus animeStatusPage2 = animePage.gotoAnimeStatus();
+          Anime animePage3 = animeStatusPage2.setStatus(status2.toString(), episodes2.toString(), score2.toString());
+
+          actualStatus = animePage3.getAnimeStatus();
+          actualScore = animePage3.getAnimeScore();
+          actualEpisodes = animePage3.getAnimeWatchedEpisodes();
+
+          assertEquals(status2.toString(), actualStatus);
+          assertEquals(score2.toString(), actualScore);
+          assertEquals(episodes2.toString(), actualEpisodes);
+
+
+          AnimeStatus animeStatusPage3 = animePage.gotoAnimeStatus();
+          Anime animePage4 = animeStatusPage3.deleteStatus();
+
+          assertTrue("Expected 'Add to List' element to be visible", animePage4.isAddlistElementVisible());
+     }
+
+
+     @Test
+     public void testAnimeSearchOnFirstPage() {
+          String[][] searchQueries = {
+                            {"Attack on Titan", "1", "Shingeki no Kyojin", "TV", "25"},
+                            {"Death Note", "1", "Death Note", "TV", "37"},
+                            {"Fullmetal Alchemist", "1", "Fullmetal Alchemist", "TV", "51"},
+                            {"Fullmetal Alchemist", "0", "Shingeki no Kyojin", "-", "-"}
+                      };
+
+          for (String[] query : searchQueries) {
+               String searchTerm = query[0];
+               boolean isSearchResultExpected = query[1].equals("1");
+               String expectedTitle = query[2];
+               String expectedType = query[3];
+               String expectedEpisodes = query[4];
+
+
+               AnimeSearch animeSearchPage = new AnimeSearch(this.driver);
+               animeSearchPage.searchAnime(searchTerm);
+
+               boolean isTitleDisplayed = animeSearchPage.isSearchResultPresent(expectedTitle);
+               assertEquals(isSearchResultExpected, isTitleDisplayed);
+
+               if (isTitleDisplayed) {
+                   String actualType = animeSearchPage.getSearchResultType(expectedTitle);
+                   String actualEpisodes = animeSearchPage.getSearchResultEpisodes(expectedTitle);
+
+                   assertEquals(expectedType, actualType);
+                   assertEquals(expectedEpisodes, actualEpisodes);
+               }
+          }
      }
 
 

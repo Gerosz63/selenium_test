@@ -5,6 +5,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import net.sourceforge.htmlunit.corejs.javascript.tools.debugger.Main;
+
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import org.openqa.selenium.By;
@@ -40,7 +43,9 @@ public class LoginPage extends PageBase {
      }
      public MainPage validLogin(String username, String password) {
           login(username, password);
-          return new MainPage(driver);
+          MainPage mainPage = new MainPage(driver);
+          mainPage.waitForPageToLoad();
+          return mainPage;
      }
      public LoginPage invalidLogin(String username, String password) {
           login(username, password);

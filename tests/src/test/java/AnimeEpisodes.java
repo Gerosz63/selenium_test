@@ -14,9 +14,15 @@ import org.openqa.selenium.NoSuchElementException;
 
 public class AnimeEpisodes extends PageBase {
 
+     private By episodeListLocator = By.xpath("//table//table[contains(@class,'episode_list')]/tbody");
+
      public AnimeEpisodes(WebDriver driver) {
           super(driver);
-          this.driver.get(baseUrl);
+     }
+
+     public int getEpisodeCount() {
+          WebElement tbody = driver.findElement(episodeListLocator);
+          return tbody.findElements(By.tagName("tr")).size();
      }
 
 }
